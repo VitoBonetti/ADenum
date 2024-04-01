@@ -88,9 +88,13 @@ class LdapEnum:
             server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie="")]
     
             while True:
-                result_type, result_data, result_msgid, server_controls = self.ldapCon.search_ext(
-                    self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
+                try: 
+                    result_type, result_data, result_msgid, server_controls = self.ldapCon.search_ext(
+                        self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
                 )
+    
+                except TypeError:
+                    break  # Break the loop if TypeError occurs
     
                 for dn, entry in result_data:
                     resultSearch.append([dn, entry])
