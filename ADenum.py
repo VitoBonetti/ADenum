@@ -81,44 +81,44 @@ class LdapEnum:
         print("====================================================\n\n")
         
     def __SearchServerLdap(self, OBJECT_TO_SEARCH: str, ATTRIBUTES_TO_SEARCH: str) -> list:
-    resultSearch = []
-
-    try:
-        page_size = 100  # Define your desired page size
-        server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie="")]
-
-        while True:
-            result_type, result_data, result_msgid, server_controls = self.ldapCon.search_ext(
-                self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
-            )
-
-            for dn, entry in result_data:
-                resultSearch.append([dn, entry])
-
-            # Extract paging control to determine if there are more pages
-            pctrls = [c for c in server_controls if c.controlType == ldap.controls.SimplePagedResultsControl.controlType]
-            if pctrls:
-                cookie = pctrls[0].cookie
-                if cookie:
-                    # If there's a cookie, it means there are more pages
-                    server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie=cookie)]
+        resultSearch = []
+    
+        try:
+            page_size = 100  # Define your desired page size
+            server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie="")]
+    
+            while True:
+                result_type, result_data, result_msgid, server_controls = self.ldapCon.search_ext(
+                    self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
+                )
+    
+                for dn, entry in result_data:
+                    resultSearch.append([dn, entry])
+    
+                # Extract paging control to determine if there are more pages
+                pctrls = [c for c in server_controls if c.controlType == ldap.controls.SimplePagedResultsControl.controlType]
+                if pctrls:
+                    cookie = pctrls[0].cookie
+                    if cookie:
+                        # If there's a cookie, it means there are more pages
+                        server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie=cookie)]
+                    else:
+                        # No more pages, break the loop
+                        break
                 else:
-                    # No more pages, break the loop
+                    # Server does not support paging, break the loop
                     break
-            else:
-                # Server does not support paging, break the loop
-                break
-
-        if len(resultSearch) == 0:
-            log.warning("No entry found!")
-    except ldap.OPERATIONS_ERROR as error:
-        log.failure("OPERATIONS_ERROR: " + str(error))
-        exit(0)
-    except ldap.LDAPError as error:
-        log.failure("LDAPError: " + str(error))
-        exit(0)
-
-    return resultSearch
+    
+            if len(resultSearch) == 0:
+                log.warning("No entry found!")
+        except ldap.OPERATIONS_ERROR as error:
+            log.failure("OPERATIONS_ERROR: " + str(error))
+            exit(0)
+        except ldap.LDAPError as error:
+            log.failure("LDAPError: " + str(error))
+            exit(0)
+    
+        return resultSearch
 
     # Unix timestamp to the AD one
     def __datetime_to_mstimestamp(self, dt:datetime)->int:
