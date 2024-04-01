@@ -111,7 +111,7 @@ class LdapEnum:
         resultSearch = []
     
         try:
-            page_size = 1000  # Define your desired page size
+            page_size = 100  # Define your desired page size
             server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie="")]
     
             while True:
