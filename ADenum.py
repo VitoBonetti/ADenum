@@ -92,9 +92,6 @@ class LdapEnum:
                     result_type, result_data, result_msgid, server_controls = self.ldapCon.search_ext(
                         self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
                     )
-                except TypeError:
-                    log.failure("OPERATIONS_ERROR: _SearchServerLdap TypeError: {str(e)}")
-                    break  # Break the loop if TypeError occurs
                     
                 for dn, entry in result_data:
                     print("DN:", dn)
@@ -122,6 +119,9 @@ class LdapEnum:
             exit(0)
         except ldap.LDAPError as error:
             log.failure("LDAPError: " + str(error))
+            exit(0)
+        except TypeError as error:
+            log.failure("TypeError: " + str(error))
             exit(0)
 
         return resultSearch
