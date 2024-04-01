@@ -97,7 +97,7 @@ class LdapEnum:
                     break  # Break the loop if TypeError occurs
                     
                 for dn, entry in result_data:
-                    resultSearch.append([dn, entry])
+                    resultSearch.append([dn.decode(), entry])
 
             # Extract paging control to determine if there are more pages
                 pctrls = [c for c in server_controls if c.controlType == ldap.controls.SimplePagedResultsControl.controlType]
