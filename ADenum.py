@@ -93,6 +93,7 @@ class LdapEnum:
                         self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
                     )
                 except TypeError:
+                    log.failure("OPERATIONS_ERROR: _SearchServerLdap TypeError")
                     break  # Break the loop if TypeError occurs
                     
                 for dn, entry in result_data:
@@ -144,6 +145,7 @@ class LdapEnum:
                         self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
                     )
                 except TypeError:
+                    log.failure("OPERATIONS_ERROR: SearchServerLdapUser TypeError")
                     break  # Break the loop if TypeError occurs
                 
                 for dn, entry in result_data:
