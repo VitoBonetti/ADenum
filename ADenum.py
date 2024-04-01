@@ -93,10 +93,12 @@ class LdapEnum:
                         self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
                     )
                 except TypeError:
-                    log.failure("OPERATIONS_ERROR: _SearchServerLdap TypeError")
+                    log.failure("OPERATIONS_ERROR: _SearchServerLdap TypeError: {str(e)}")
                     break  # Break the loop if TypeError occurs
                     
                 for dn, entry in result_data:
+                    print("DN:", dn)
+                    print("Entry:", entry)
                     resultSearch.append([dn, entry])
 
             # Extract paging control to determine if there are more pages
