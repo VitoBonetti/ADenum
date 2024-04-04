@@ -139,17 +139,17 @@ class LdapEnum:
             server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie="")]
     
             while True:
-                try:
-                    result_type, result_data, result_msgid, server_controls = self.ldapCon.search_ext(
-                        self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls
-                    )
-                except TypeError:
-                    break  # Break the loop if TypeError occurs
+                msgid = self.ldapCon.search_ext(self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls)
+                    _, result_data, _, serverctrls = self.ldapCon.result3(msgid)
                 
-                for dn, entry in result_data:
-                    username = entry.get('sAMAccountName', [b''])[0].decode()
-                    if username != "krbtgt":
-                        resultSearch.append([dn.decode(), username])
+                for info in result_data:
+                    if(info[0] != None):
+                        baseName = info[0]
+                        username = info[1]["sAMAccountName"][0].decode()
+                        if(username != "krbtgt"):
+                            resultSearch.append([baseName,username])
+                if(len(resultSearch) == 0):
+                    log.warning("No entry found !")
     
                 # Extract paging control to determine if there are more pages
                 pctrls = [c for c in server_controls if c.controlType == ldap.controls.SimplePagedResultsControl.controlType]
