@@ -90,7 +90,7 @@ class LdapEnum:
     
                 while True:
                     # Perform LDAP search with paging control
-                    msgid = self.ldapCon.search_ext_s(self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, 0, serverctrls=server_controls, 'none', -1, 100)
+                    msgid = self.ldapCon.search_ext_s(self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, 0, serverctrls=server_controls, clientctrls='none', -1, 100)
                     _, result_data, _, serverctrls = self.ldapCon.result3(msgid)
     
                     # Add the search results to resultSearch list
@@ -139,7 +139,7 @@ class LdapEnum:
             server_controls = [ldap.controls.SimplePagedResultsControl(True, size=page_size, cookie="")]
     
             while True:
-                msgid = self.ldapCon.search_ext_s(self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, 0, serverctrls=server_controls, 'none', -1, 100)
+                msgid = self.ldapCon.search_ext_s(self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, 0, serverctrls=server_controls, clientctrls='none', timeout=-1, sizelimit=100)
                 _, result_data, _, serverctrls = self.ldapCon.result3(msgid)
                 
                 for info in result_data:
