@@ -140,7 +140,7 @@ class LdapEnum:
     
             while True:
                 msgid = self.ldapCon.search_ext(self.baseDn, ldap.SCOPE_SUBTREE, OBJECT_TO_SEARCH, ATTRIBUTES_TO_SEARCH, serverctrls=server_controls)
-                    _, result_data, _, serverctrls = self.ldapCon.result3(msgid)
+                _, result_data, _, serverctrls = self.ldapCon.result3(msgid)
                 
                 for info in result_data:
                     if(info[0] != None):
