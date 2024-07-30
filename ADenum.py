@@ -216,7 +216,7 @@ class LdapEnum:
         if(is_SSL):
             ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
             connect = ldap.initialize('ldaps://' + ip_address)
-            connect.start_tls_s()
+            # connect.start_tls_s()
             log.info("SSL connect:\t"+highlightGreen("TRUE"))
             # TODO:
             # con.get_option(ldap.OPT_X_TLS_CIPHER)
